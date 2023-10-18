@@ -1,0 +1,60 @@
+Q = [10,50,100,500,1000,5000,10000];
+S = 0.01;
+B = 200; % ft
+n = 0.035;
+g = 32.2; % ft/s2
+
+y = NaN(length(Q),1);
+V = NaN(length(Q),1);
+c_k = NaN(length(Q),1);
+c_d = NaN(length(Q),1);
+V_cd = NaN(length(Q),2);
+for i = 1: length(Q)
+    y(i,1) = (n*Q(i)/(1.49*((S)^(1/2))*B))^(3/5);
+
+    V(i,1) = Q(i)/(B*y(i,1));
+
+    c_k(i,1) = 1.49*((S)^(1/2))*5*((y(i,1))^(2/3))/(3*n);
+
+
+    c_d(i,1) = sqrt(g*y(i,1));
+
+    V_cd(i,1) = V(i,1) - c_d(i,1);
+    V_cd(i,2) = V(i,1) + c_d(i,1);
+end
+
+figure 
+semilogx(Q,V,'k-o')
+xlabel('Flow rate (cfs)')
+ylabel('Velocity (ft/s)')
+grid on;
+title('Variation of velocity with flow rate')
+exportgraphics(gcf,'Fig1.jpg')
+
+figure 
+semilogx(Q,c_k,'k-o')
+xlabel('Flow rate (cfs)')
+ylabel('Wave celerity (ft/s)')
+grid on;
+title('Variation of kinematic wave celerity with flow rate')
+exportgraphics(gcf,'Fig2.jpg')
+
+figure 
+semilogx(Q,c_d,'k-o')
+xlabel('Flow rate (cfs)')
+ylabel('Wave celerity (ft/s)')
+grid on;
+title('Variation of dynamic wave celerity with flow rate')
+exportgraphics(gcf,'Fig3.jpg')
+
+figure 
+semilogx(Q,V_cd(:,1),'b-o'); hold on;
+semilogx(Q,V_cd(:,2),'r-o'); 
+legend('Upstream wave','Downstream wave')
+xlabel('Flow rate (cfs)')
+ylabel('Velocity of propogation (ft/s)')
+grid on;
+title('Variation of velocity of propogation with flow rate')
+exportgraphics(gcf,'Fig4.jpg')
+
+
